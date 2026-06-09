@@ -11,6 +11,10 @@
     <%= f.input :last_name,
                 required: true,
                 input_html: { autocomplete: "family-name" } %>
+    <%= f.input :user_location,
+                label: "Location (city)",
+                required: true,
+                input_html: { autocomplete: "address-level2" } %>
     <%= f.input :email,
                 required: true,
                 input_html: { autocomplete: "email" } %>
