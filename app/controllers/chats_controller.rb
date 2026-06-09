@@ -1,5 +1,6 @@
 class ChatsController < ApplicationController
   before_action :set_plant, only: %i[create show]
+
   def show
     @chat = Chat.find(params[:id])
     @messages = @chat.messages
