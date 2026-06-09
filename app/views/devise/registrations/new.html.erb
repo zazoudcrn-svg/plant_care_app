@@ -1,31 +1,50 @@
-<h2>Sign up</h2>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-5">
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
+      <div class="card shadow-lg border-0 rounded-4 p-4 p-sm-5 bg-white">
 
-  <div class="form-inputs">
-    <%= f.input :first_name,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "given-name" } %>
-    <%= f.input :last_name,
-                required: true,
-                input_html: { autocomplete: "family-name" } %>
-    <%= f.input :email,
-                required: true,
-                input_html: { autocomplete: "email" } %>
-    <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+        <div class="text-center mb-4">
+          <div class="bg-success text-white rounded-3 p-3 shadow-sm d-inline-flex align-items-center justify-content-center mb-3" style="width: 55px; height: 55px;">
+            <i class="fas fa-leaf fs-3"></i>
+          </div>
+          <h2 class="fw-bold text-dark mb-1">Create Your Account</h2>
+          <p class="text-muted small">Join our plant care community today</p>
+        </div>
+
+        <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+          <%= f.error_notification %>
+
+          <div class="form-inputs">
+            <%= f.input :first_name,
+                        required: true,
+                        autofocus: true,
+                        input_html: { autocomplete: "given-name" } %>
+            <%= f.input :last_name,
+                        required: true,
+                        input_html: { autocomplete: "family-name" } %>
+            <%= f.input :email,
+                        required: true,
+                        input_html: { autocomplete: "email" } %>
+            <%= f.input :password,
+                        required: true,
+                        hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                        input_html: { autocomplete: "new-password" } %>
+            <%= f.input :password_confirmation,
+                        required: true,
+                        input_html: { autocomplete: "new-password" } %>
+          </div>
+
+          <div class="form-actions mb-3">
+            <%= f.button :submit, "Sign up", class: "btn btn-success btn-lg w-100 rounded-pill fw-semibold shadow-sm" %>
+          </div>
+        <% end %>
+        <hr class="text-muted opacity-25 my-4">
+
+        <div class="text-center small custom-devise-links">
+          <%= render "devise/shared/links" %>
+        </div>
+
+      </div> </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
