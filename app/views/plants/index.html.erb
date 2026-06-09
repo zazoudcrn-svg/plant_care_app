@@ -1,0 +1,29 @@
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold text-success">My Garden & Houseplants 🌱</h1>
+    <span class="badge bg-success fs-6"><%= @plants.count %> Plants Total</span>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <% @plants.each do |plant| %>
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 rounded-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title fw-bold mb-0"><%= plant.name %></h5>
+              <span class="badge bg-light text-muted border"><%= plant.sunlight_exposure %></span>
+            </div>
+            <p class="text-muted small italic mb-3">🔬 <%= plant.specie %></p>
+
+            <ul class="list-unstyled my-3 small">
+              <li>📍 <strong>Location:</strong> <%= plant.plant_location %></li>
+              <li>💧 <strong>Last Watered:</strong> <%= plant.last_watered_on || "Never" %></li>
+            </ul>
+
+            <%= link_to "Open AI Chat & Details", plant_path(plant), class: "btn btn-outline-success w-100 rounded-pill fw-semibold mt-2" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
