@@ -4,23 +4,13 @@
       <%= link_to "← Back to #{@plant.name}", plant_path(@plant), class: "text-success text-decoration-none fw-semibold mb-4 d-inline-block" %>
       <h1 class="mb-4"><%= @chat.title %></h1>
 
-      <div class="mb-4">
-        <% @messages.each do |message| %>
-          <div class="d-flex mb-3 <%= message.role == 'user' ? 'justify-content-end' : 'justify-content-start' %>">
-            <div class="p-3 rounded" style="max-width: 75%; background: <%= message.role == 'user' ? '#d4edda' : '#f8f9fa' %>;">
-              <small class="text-muted d-block mb-1"><%= message.role.capitalize %></small>
-              <%= message.content %>
-            </div>
-          </div>
-        <% end %>
+      <div class="mb-4" id="messages" data-controller="scroll" data-action="turbo:before-stream-render@document->scroll#scroll" style="height: 60vh; overflow-y: auto;">
+        <%= render @messages %>
       </div>
 
-      <%= form_with model: [@plant, @chat, Message.new] do |f| %>
-        <div class="input-group">
-          <%= f.text_area :content, class: "form-control", placeholder: "Ask about your plant...", rows: 2 %>
-          <%= f.submit "Send", class: "btn btn-success" %>
-        </div>
-      <% end %>
+      <div id="new_message_container">
+        <%= render "messages/form", plant: @plant, chat: @chat, message: Message.new %>
+      </div>
 
     </div>
   </div>

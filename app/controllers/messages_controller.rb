@@ -6,9 +6,21 @@ class MessagesController < ApplicationController
     @message.role = "user"
     if @message.save
       generate_ai_response
-      redirect_to plant_chat_path(@plant, @chat)
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to plant_chat_path(@plant, @chat) }
+      end
     else
-      redirect_to plant_chat_path(@plant, @chat), alert: @message.errors[:content].first
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "new_message_container",
+            partial: "messages/form",
+            locals: { plant: @plant, chat: @chat, message: @message }
+          )
+        end
+        format.html { redirect_to plant_chat_path(@plant, @chat), alert: @message.errors[:content].first }
+      end
     end
   end
 
@@ -18,7 +30,7 @@ class MessagesController < ApplicationController
     @ruby_llm_chat = RubyLLM.chat
     build_conversation_history
     response = @ruby_llm_chat.ask(@message.content)
-    @chat.messages.create!(role: "assistant", content: response.content)
+    @assistant_message = @chat.messages.create!(role: "assistant", content: response.content)
   end
 
   def build_conversation_history
