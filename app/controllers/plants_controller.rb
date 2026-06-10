@@ -8,6 +8,21 @@ class PlantsController < ApplicationController
     @chats = @plant.chats.where(user: current_user)
   end
 
+  def new
+    @plant = Plant.new
+  end
+
+  def create
+    @plant = Plant.new(plant_params)
+    @plant.user = current_user
+
+    if @plant.save
+      redirect_to plants_path, notice: 'Plant added to your Dashboard! 🌱'
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def edit
     @plant = current_user.plants.find(params[:id])
   end
@@ -37,8 +52,7 @@ class PlantsController < ApplicationController
       :sunlight_exposure,
       :date_added,
       :last_watered_on,
-      :last_fertilized_on,
-      :system_prompt
+      :last_fertilized_on
     )
   end
 end
