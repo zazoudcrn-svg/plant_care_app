@@ -5,5 +5,6 @@ class PlantsController < ApplicationController
 
   def show
     @plant = current_user.plants.find(params[:id])
+    @chats = @plant.chats.where(user: current_user)
   end
 end
