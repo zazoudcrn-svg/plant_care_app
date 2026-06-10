@@ -1,12 +1,11 @@
 Rails.application.routes.draw do
+  get "plants/index"
+  get "plants/show"
   devise_for :users
   root to: "pages#home"
-  resources :plants, only: [:index, :show] do
-    resources :chats, only: [:create, :show] do
-      resources :messages, only: [:create]
-    end
-  end
+  resources :plants, only: [:index, :show, :new, :create]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  post "plants/:plant_id/chats", to: "chats#create", as: :plant_chats
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
