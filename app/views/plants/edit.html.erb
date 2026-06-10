@@ -38,11 +38,6 @@
       <%= f.date_field :last_fertilized_on, class: "form-control" %>
     </div>
 
-    <div class="mb-3">
-      <%= f.label :system_prompt, "AI System Prompt (optional)", class: "form-label fw-semibold" %>
-      <%= f.text_area :system_prompt, rows: 3, class: "form-control" %>
-    </div>
-
     <div class="d-flex gap-3 mt-4">
       <%= f.submit "Save changes", class: "btn btn-success px-4" %>
       <%= link_to "Cancel", @plant, class: "btn btn-outline-secondary" %>
