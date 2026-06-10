@@ -5,13 +5,27 @@ class MessagesController < ApplicationController
     @message = @chat.messages.new(message_params)
     @message.role = "user"
     if @message.save
+      generate_ai_response
       redirect_to plant_chat_path(@plant, @chat)
     else
-      redirect_to plant_chat_path(@plant, @chat), alert: "Message could not be sent."
+      redirect_to plant_chat_path(@plant, @chat), alert: @message.errors[:content].first
     end
   end
 
   private
+
+  def generate_ai_response
+    @ruby_llm_chat = RubyLLM.chat
+    build_conversation_history
+    response = @ruby_llm_chat.ask(@message.content)
+    @chat.messages.create!(role: "assistant", content: response.content)
+  end
+
+  def build_conversation_history
+    @chat.messages.each do |message|
+      @ruby_llm_chat.add_message(message)
+    end
+  end
 
   def message_params
     params.require(:message).permit(:content)
