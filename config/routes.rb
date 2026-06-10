@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
   root to: "pages#home"
-  resources :plants, only: [:index, :show] do
+  resources :plants do
     resources :chats, only: [:create, :show] do
       resources :messages, only: [:create]
     end
