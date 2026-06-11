@@ -16,7 +16,8 @@ test_user = User.create!(
   email: "botanik@example.com",
   password: "password123",
   first_name: "Desiree",
-  last_name: "Kaidi"
+  last_name: "Kaidi",
+  user_location: "Cologne"
 )
 
 puts "Creating 5 plants (3 indoor, 2 outdoor)..."
