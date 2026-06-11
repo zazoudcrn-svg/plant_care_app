@@ -34,39 +34,64 @@
           </table>
         </div>
       </div>
-    </div>
 
-  <div class="col-md-7">
-    <div class="card shadow-sm border-0 rounded-3">
-      <div class="card-header bg-success text-white fw-bold py-3 border-0 rounded-top-3 d-flex justify-content-between align-items-center">
-        <span>🤖 Chats with <%= @plant.name %></span>
-        <%= button_to "New Chat", plant_chats_path(@plant), method: :post, class: "btn btn-sm btn-light fw-semibold" %>
-      </div>
+      <% if @weather && @weather["main"] %>
+        <div class="bg-white p-4 rounded-3 shadow-sm border mt-4">
+          <h6 class="fw-bold text-muted mb-3">🌤️ Weather in <%= current_user.user_location %></h6>
 
-      <div class="card-body p-3">
-        <% if @chats.empty? %>
-          <p class="text-muted text-center my-4">No chats yet. Start one!</p>
-        <% else %>
-          <% @chats.each do |chat| %>
-            <div class="card mb-2 border-0 shadow-sm">
-              <div class="card-body d-flex justify-content-between align-items-center py-2">
-                <span class="fw-semibold"><%= chat.title %></span>
-                <%= link_to "Open", plant_chat_path(@plant, chat), class: "btn btn-sm btn-outline-success" %>
-              </div>
+          <p class="mb-1 fw-bold fs-4"><%= @weather["main"]["temp"].round %>°C</p>
+          <p class="mb-1 text-muted text-capitalize"><%= @weather["weather"][0]["description"] %></p>
+          <p class="mb-3 small text-muted">💧 Humidity: <%= @weather["main"]["humidity"] %>%</p>
+
+          <% if @forecast %>
+            <hr>
+            <div class="d-flex justify-content-between mt-3">
+              <% @forecast.each do |day| %>
+                <div class="text-center">
+                  <p class="mb-1 small fw-bold"><%= Date.parse(day["dt_txt"]).strftime("%a") %></p>
+                  <p class="mb-1 small fw-bold"><%= day["main"]["temp"].round %>°C</p>
+                  <p class="mb-1 text-muted text-capitalize" style="font-size: 0.7rem;"><%= day["weather"][0]["main"] %></p>
+                  <p class="mb-0 text-muted" style="font-size: 0.7rem;">💧 <%= day["main"]["humidity"] %>%</p>
+                </div>
+              <% end %>
             </div>
           <% end %>
-        <% end %>
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="col-md-7">
+      <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-success text-white fw-bold py-3 border-0 rounded-top-3 d-flex justify-content-between align-items-center">
+          <span>🤖 Chats with <%= @plant.name %></span>
+          <%= button_to "New Chat", plant_chats_path(@plant), method: :post, class: "btn btn-sm btn-light fw-semibold" %>
+        </div>
+
+        <div class="card-body p-3">
+          <% if @chats.empty? %>
+            <p class="text-muted text-center my-4">No chats yet. Start one!</p>
+          <% else %>
+            <% @chats.each do |chat| %>
+              <div class="card mb-2 border-0 shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center py-2">
+                  <span class="fw-semibold"><%= chat.title %></span>
+                  <%= link_to "Open", plant_chat_path(@plant, chat), class: "btn btn-sm btn-outline-success" %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>
   </div>
-    <div class="d-flex gap-3 mb-4">
-      <%= link_to "Edit", edit_plant_path(@plant), class: "btn btn-warning" %>
 
-      <%= link_to "Delete",
+  <div class="d-flex gap-3 mb-4">
+    <%= link_to "Edit", edit_plant_path(@plant), class: "btn btn-warning" %>
+    <%= link_to "Delete",
       plant_path(@plant),
       data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
       class: "btn btn-danger" %>
-   </div>
+  </div>
 
 </div>
