@@ -6,3 +6,4 @@
 <%= turbo_stream.update "new_message_container" do %>
   <%= render "messages/form", plant: @plant, chat: @chat, message: Message.new %>
 <% end %>
+<%= turbo_stream.update "chat_title", @chat.title %>
