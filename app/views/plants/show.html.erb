@@ -4,7 +4,14 @@
   <div class="row g-5">
     <div class="col-md-5">
       <div class="bg-white p-4 rounded-3 shadow-sm border">
-        <%= image_tag "https://greenboog.com/wp-content/uploads/2023/11/Monstera-deliciosa.webp", class: "rounded-3 w-100 mb-4", style: "height: 300px; object-fit: cover;" %>
+        <%#= image_tag "https://greenboog.com/wp-content/uploads/2023/11/Monstera-deliciosa.webp", class: "rounded-3 w-100 mb-4", style: "height: 300px; object-fit: cover;" %>
+        <% if @plant.photos.attached? %>
+          <% @plant.photos.each do |photo| %>
+          <%= image_tag photo, class: "rounded-3 w-100 mb-4", style: "height: 300px; object-fit: cover;" %>
+          <% end %>
+          <% else %>
+          <%= image_tag "Monstera-deliciosa.webp", class: "rounded-3 w-100 mb-4", style: "height: 300px; object-fit: cover;" %>
+          <% end %>
         <h1 class="fw-bold text-dark mb-1"><%= @plant.name %></h1>
         <p class="text-muted italic mb-4">Species: <%= @plant.specie %></p>
 

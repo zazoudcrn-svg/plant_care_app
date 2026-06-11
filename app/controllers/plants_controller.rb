@@ -31,7 +31,11 @@ class PlantsController < ApplicationController
 
   def update
     @plant = current_user.plants.find(params[:id])
-    if @plant.update(plant_params)
+
+    # Add new photos without removing old ones
+    @plant.photos.attach(plant_params[:photos]) if plant_params[:photos]
+
+    if @plant.update(plant_params.except(:photos))
       redirect_to @plant, notice: "Plant updated successfully"
     else
       render :edit, status: :unprocessable_entity
@@ -49,17 +53,21 @@ class PlantsController < ApplicationController
   def fetch_weather(city)
     return nil if city.blank?
 
-    url = "https://api.openweathermap.org/data/2.5/weather?q=#{URI.encode_www_form_component(city)}&appid=#{ENV['OPENWEATHERMAP_API_KEY']}&units=metric"
+    url = "https://api.openweathermap.org/data/2.5/weather?q=#{URI.encode_www_form_component(city)}&appid=#{ENV.fetch(
+      'OPENWEATHERMAP_API_KEY', nil
+    )}&units=metric"
     response = Net::HTTP.get(URI.parse(url))
     JSON.parse(response)
-  rescue
+  rescue StandardError
     nil
   end
 
   def fetch_forecast(city)
     return nil if city.blank?
 
-    url = "https://api.openweathermap.org/data/2.5/forecast?q=#{URI.encode_www_form_component(city)}&appid=#{ENV['OPENWEATHERMAP_API_KEY']}&units=metric"
+    url = "https://api.openweathermap.org/data/2.5/forecast?q=#{URI.encode_www_form_component(city)}&appid=#{ENV.fetch(
+      'OPENWEATHERMAP_API_KEY', nil
+    )}&units=metric"
     response = Net::HTTP.get(URI.parse(url))
     data = JSON.parse(response)
 
@@ -67,7 +75,7 @@ class PlantsController < ApplicationController
                 .reject { |date, _| date == Date.today.to_s }
                 .map { |date, entries| entries.find { |e| e["dt_txt"].include?("12:00:00") } || entries.first }
                 .first(5)
-  rescue
+  rescue StandardError
     nil
   end
 
@@ -79,7 +87,8 @@ class PlantsController < ApplicationController
       :sunlight_exposure,
       :date_added,
       :last_watered_on,
-      :last_fertilized_on
+      :last_fertilized_on,
+      photos: []
     )
   end
 end
