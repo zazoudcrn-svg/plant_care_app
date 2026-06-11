@@ -16,8 +16,20 @@
 
           <div class="form-inputs">
             <%= f.input :name, placeholder: "e.g. Monty", required: true, autofocus: true %>
-            <%= f.input :specie, label: "Species", placeholder: "e.g. Monstera", required: true %>
-            <%= f.input :plant_location, label: "Location", placeholder: "e.g. Living room" %>
+            <div data-controller="autocomplete-plant" style="position: relative;">
+            <%= f.input :specie,
+                        label: "Species",
+                        placeholder: "e.g. Monstera",
+                        required: true,
+                        input_html: {
+                          data: {
+                            autocomplete_plant_target: "input",
+                            action: "input->autocomplete-plant#search"
+                          },
+                          autocomplete: "off"
+                        } %>
+            <div data-autocomplete-plant-target="results"></div>
+            </div> <%= f.input :plant_location, label: "Location", placeholder: "e.g. Living room" %>
             <%= f.input :sunlight_exposure,
                         label: "Sunlight Exposure",
                         collection: ["Full sun", "Indirect sunlight", "Partial shade", "Shade"],
