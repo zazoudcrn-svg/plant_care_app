@@ -71,11 +71,6 @@
       </div>
     </div>
   </div>
-<<<<<<< feature-plant-system-prompt
-
-  <div class="d-flex gap-3 mb-4 mt-4">
-    <%= link_to "Edit", edit_plant_path(@plant), class: "btn btn-warning" %>
-=======
     <div class="d-flex justify-content-left gap-3 mt-4">
          <%= link_to edit_plant_path(@plant), class: "btn btn-success px-4" do %> <i class="bi bi-pencil"></i> Edit
          <% end %>
@@ -85,12 +80,5 @@
            class: "btn btn-outline-secondary" do %> <i class="bi bi-trash"></i> Delete
          <% end %>
      </div>
-
->>>>>>> master
-
-    <%= link_to "Delete",
-    plant_path(@plant),
-    data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-    class: "btn btn-danger" %>
   </div>
 </div>
