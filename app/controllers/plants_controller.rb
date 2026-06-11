@@ -6,6 +6,8 @@ class PlantsController < ApplicationController
   def show
     @plant = current_user.plants.find(params[:id])
     @chats = @plant.chats.where(user: current_user)
+    @weather = fetch_weather(current_user.user_location)
+    @forecast = fetch_forecast(current_user.user_location)
   end
 
   def new
@@ -43,6 +45,31 @@ class PlantsController < ApplicationController
   end
 
   private
+
+  def fetch_weather(city)
+    return nil if city.blank?
+
+    url = "https://api.openweathermap.org/data/2.5/weather?q=#{URI.encode_www_form_component(city)}&appid=#{ENV['OPENWEATHERMAP_API_KEY']}&units=metric"
+    response = Net::HTTP.get(URI.parse(url))
+    JSON.parse(response)
+  rescue
+    nil
+  end
+
+  def fetch_forecast(city)
+    return nil if city.blank?
+
+    url = "https://api.openweathermap.org/data/2.5/forecast?q=#{URI.encode_www_form_component(city)}&appid=#{ENV['OPENWEATHERMAP_API_KEY']}&units=metric"
+    response = Net::HTTP.get(URI.parse(url))
+    data = JSON.parse(response)
+
+    data["list"].group_by { |entry| entry["dt_txt"].split(" ").first }
+                .reject { |date, _| date == Date.today.to_s }
+                .map { |date, entries| entries.find { |e| e["dt_txt"].include?("12:00:00") } || entries.first }
+                .first(5)
+  rescue
+    nil
+  end
 
   def plant_params
     params.require(:plant).permit(

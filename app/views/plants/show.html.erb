@@ -34,7 +34,41 @@
             </tbody>
           </table>
         </div>
+
+        <div class="d-flex justify-content-left gap-2 mt-3">
+          <%= link_to edit_plant_path(@plant), class: "btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center", style: "width: 42px; height: 42px;" do %>
+            <i class="fa-solid fa-pen"></i>
+          <% end %>
+          <%= link_to plant_path(@plant), data: { turbo_method: :delete, turbo_confirm: "Delete this plant?" }, class: "btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center", style: "width: 42px; height: 42px;" do %>
+            <i class="fa-solid fa-trash"></i>
+          <% end %>
+        </div>
       </div>
+
+      <% if @weather && @weather["main"] %>
+        <div class="bg-white p-4 rounded-3 shadow-sm border mt-4">
+          <h6 class="fw-bold text-muted mb-3">🌤️ Weather in <%= current_user.user_location %></h6>
+
+          <p class="mb-1 fw-bold fs-4"><%= @weather["main"]["temp"].round %>°C</p>
+          <p class="mb-1 text-muted text-capitalize"><%= @weather["weather"][0]["description"] %></p>
+          <p class="mb-3 small text-muted">💧 Humidity: <%= @weather["main"]["humidity"] %>%</p>
+
+          <% if @forecast %>
+            <hr>
+            <div class="d-flex justify-content-between mt-3">
+              <% @forecast.each do |day| %>
+                <div class="text-center">
+                  <p class="mb-1 small fw-bold"><%= Date.parse(day["dt_txt"]).strftime("%a") %></p>
+                  <p class="mb-1 small fw-bold"><%= day["main"]["temp"].round %>°C</p>
+                  <p class="mb-1 text-muted text-capitalize" style="font-size: 0.7rem;"><%= day["weather"][0]["main"] %></p>
+                  <p class="mb-0 text-muted" style="font-size: 0.7rem;">💧 <%= day["main"]["humidity"] %>%</p>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
     </div>
 
     <div class="col-md-7">
@@ -66,13 +100,4 @@
       </div>
     </div>
   </div>
-
-    <div class="d-flex justify-content-left gap-2 mt-4">
-      <%= link_to edit_plant_path(@plant), class: "btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center", style: "width: 42px; height: 42px;" do %>
-        <i class="fa-solid fa-pen"></i>
-      <% end %>
-      <%= link_to plant_path(@plant), data: { turbo_method: :delete, turbo_confirm: "Delete this plant?" }, class: "btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center", style: "width: 42px; height: 42px;" do %>
-        <i class="fa-solid fa-trash"></i>
-      <% end %>
-    </div>
 </div>
