@@ -6,6 +6,7 @@ class MessagesController < ApplicationController
     @message.role = "user"
     if @message.save
       generate_ai_response
+      generate_chat_title_if_first_message if @chat.messages.where(role: "user").count == 1
       respond_to do |format|
         format.turbo_stream
         format.html { redirect_to plant_chat_path(@plant, @chat) }
@@ -25,6 +26,15 @@ class MessagesController < ApplicationController
   end
 
   private
+
+  def generate_chat_title_if_first_message
+    prompt = "Create a very short, catchy title (maximum 3-4 words) in the user's language based on this message: '#{@message.content}'. Do not use quotes, punctuation, or extra explanations. Just give the title."
+
+    ai_title_response = @ruby_llm_chat.ask(prompt)
+
+    clean_title = ai_title_response.content.gsub(/['"„微]/, '').strip
+    @chat.update(title: clean_title)
+  end
 
   def generate_ai_response
     @ruby_llm_chat = RubyLLM.chat
