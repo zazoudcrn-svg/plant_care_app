@@ -17,6 +17,7 @@ test_user = User.create!(
   password: "password123",
   first_name: "Desiree",
   last_name: "Kaidi",
+  user_location: "Cologne"
 )
 
 puts "Creating 5 plants (3 indoor, 2 outdoor)..."

@@ -1,5 +1,5 @@
 class ChatsController < ApplicationController
-  before_action :set_plant, only: %i[create show]
+  before_action :set_plant, only: %i[create show destroy]
 
   def show
     @chat = Chat.find(params[:id])
@@ -16,6 +16,12 @@ class ChatsController < ApplicationController
     else
       redirect_to plant_path(@plant), alert: "Could not start chat."
     end
+  end
+
+  def destroy
+    @chat = Chat.find(params[:id])
+    @chat.destroy
+    redirect_to plant_path(@plant), status: :see_other, alert: "Chat was successfully deleted."
   end
 
   private
