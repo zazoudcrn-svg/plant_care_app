@@ -1,36 +1,47 @@
 <div class="container my-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="fw-bold text-success mb-0">My Garden & Houseplants 🌱</h1>
+    <h1 class="fw-bold text-success mb-0">My Plant Collection 🌱</h1>
 
     <%= link_to new_plant_path, class: "btn btn-success rounded-pill px-4 fw-semibold shadow-sm" do %>
       <i class="fa-solid fa-plus me-2"></i> Add Plant
     <% end %>
-
-    <span class="badge bg-success fs-6"><%= @plants.count %> Plants Total</span>
   </div>
 
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <% @plants.each do |plant| %>
       <div class="col">
         <div class="card h-100 shadow-sm border-0 rounded-3">
-          <div class="card-body">
+          <%= image_tag "https://greenboog.com/wp-content/uploads/2023/11/Monstera-deliciosa.webp", class: "card-img-top rounded-top-3", style: "height: 200px; object-fit: cover;" %>
+          <div class="card-body d-flex flex-column">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h5 class="card-title fw-bold mb-0"><%= plant.name %></h5>
-              <span class="badge bg-light text-muted border"><%= plant.sunlight_exposure %></span>
             </div>
 
-            <%# Hier ist jetzt das grüne Blatt-Icon statt der Lupe %>
             <p class="text-muted small italic mb-3">
               <i class="fa-solid fa-leaf text-success me-1"></i> <%= plant.specie %>
             </p>
 
-            <ul class="list-unstyled my-3 small">
-              <li>📍 <strong>Location:</strong> <%= plant.plant_location %></li>
-              <li>💧 <strong>Last Watered:</strong> <%= plant.last_watered_on || "Never" %></li>
-              <li>🧪 <strong>Last Fertilized:</strong> <%= plant.last_fertilized_on || "Never" %></li>
-            </ul>
+            <% overdue = plant.last_watered_on.present? && plant.last_watered_on < 7.days.ago %>
+            <p class="small mb-0">
+              <strong>Last Watered:</strong>
+              <span class="<%= 'text-danger fw-semibold' if overdue %>">
+                <%= plant.last_watered_on || "Never" %> <%= '🚨' if overdue %>
+              </span>
+            </p>
 
-            <%= link_to "Open AI Chat & Details", plant_path(plant), class: "btn btn-outline-success w-100 rounded-pill fw-semibold mt-2" %>
+            <div class="d-flex justify-content-between align-items-center mt-auto pt-3">
+              <div class="d-flex gap-2">
+                <%= link_to edit_plant_path(plant), class: "btn btn-sm btn-outline-secondary rounded-pill" do %>
+                  <i class="fa-solid fa-pen"></i>
+                <% end %>
+                <%= link_to plant_path(plant), data: { turbo_method: :delete, turbo_confirm: "Delete this plant?" }, class: "btn btn-sm btn-outline-danger rounded-pill" do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
+              <%= link_to plant_path(plant), class: "btn btn-sm btn-success rounded-pill" do %>
+                <i class="fa-solid fa-arrow-right"></i>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>

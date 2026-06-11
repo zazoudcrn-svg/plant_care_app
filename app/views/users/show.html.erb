@@ -1,0 +1,15 @@
+<%# app/views/users/show.html.erb %>
+<div class="container my-5">
+  <div class="bg-white p-4 rounded-3 shadow-sm border" style="max-width: 600px; margin: auto;">
+    <h2 class="fw-bold mb-4">My Profile</h2>
+
+    <ul class="list-unstyled small">
+      <li class="mb-2"><strong>First name:</strong> <%= current_user.first_name %></li>
+      <li class="mb-2"><strong>Last name:</strong> <%= current_user.last_name %></li>
+      <li class="mb-2"><strong>Email:</strong> <%= current_user.email %></li>
+      <li class="mb-2"><strong>Location:</strong> <%= current_user.user_location || "Not set" %></li>
+    </ul>
+
+    <%= link_to "Edit Profile", edit_profile_path, class: "btn btn-success rounded-pill px-4 mt-3" %>
+  </div>
+</div>
