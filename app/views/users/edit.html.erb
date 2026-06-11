@@ -1,0 +1,15 @@
+<%# app/views/users/edit.html.erb %>
+<div class="container my-5">
+  <div class="bg-white p-4 rounded-3 shadow-sm border" style="max-width: 600px; margin: auto;">
+    <h2 class="fw-bold mb-4">Edit Profile</h2>
+
+    <%= simple_form_for current_user, url: profile_path, method: :patch do |f| %>
+      <%= f.input :first_name %>
+      <%= f.input :last_name %>
+      <%= f.input :user_location, label: "Location" %>
+      <%= f.submit "Save Changes", class: "btn btn-success rounded-pill px-4 mt-2" %>
+    <% end %>
+
+    <%= link_to "← Back", profile_path, class: "text-success text-decoration-none d-inline-block mt-3" %>
+  </div>
+</div>
