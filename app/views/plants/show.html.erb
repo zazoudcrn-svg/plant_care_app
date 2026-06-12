@@ -12,7 +12,7 @@
               style: "height: 200px; object-fit: cover; cursor: pointer;",
               data: { upload_trigger: @plant.id } %>
           <% else %>
-            <div class="position-relative" style="height: 200px; cursor: pointer;" onclick="document.getElementById('file-input-<%= @plant.id %>').click()">
+            <div class="position-relative" style="height: 200px; cursor: pointer;" data-upload-trigger="<%= @plant.id %>">
               <%= image_tag "placeholders.jpg",
                 class: "card-img-top rounded-top-3 opacity-50",
                 style: "height: 200px; object-fit: cover;" %>
@@ -23,7 +23,7 @@
             </div>
           <% end %>
           <%= form_with model: @plant,
-            url: plant_path(@plant),
+            url: plant_path(@plant, return_to: :show),
             method: :patch,
             data: { turbo_stream: true },
             html: { id: "upload-form-#{@plant.id}" } do |f| %>

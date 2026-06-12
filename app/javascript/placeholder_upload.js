@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("turbo:load", () => {
   document.querySelectorAll("[data-upload-trigger]").forEach(trigger => {
     const plantId = trigger.dataset.uploadTrigger
     const fileInput = document.querySelector(`#file-input-${plantId}`)
