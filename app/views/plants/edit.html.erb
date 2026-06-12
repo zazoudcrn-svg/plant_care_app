@@ -3,6 +3,8 @@
 
   <%= form_with model: @plant, local: true, class: "bg-white p-4 rounded-3 shadow-sm border" do |f| %>
 
+  <%= hidden_field_tag :return_to, params[:return_to] %>
+
     <div class="mb-3">
       <%= f.label :name, class: "form-label fw-semibold" %>
       <%= f.text_field :name, class: "form-control" %>
@@ -45,7 +47,7 @@
 
     <div class="d-flex gap-3 mt-4">
       <%= f.submit "Save changes", class: "btn btn-success px-4" %>
-      <%= link_to "Cancel", @plant, class: "btn btn-outline-secondary" %>
+      <%= link_to "Cancel", params[:return_to] == "index" ? plants_path : plant_path(@plant), class: "btn btn-outline-secondary" %>
     </div>
 
   <% end %>
