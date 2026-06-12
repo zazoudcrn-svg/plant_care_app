@@ -1,0 +1,5 @@
+<turbo-stream action="replace" target="plant-image-<%= @plant.id %>">
+  <template>
+    <%= render partial: "plants/plant_image", locals: { plant: @plant } %>
+  </template>
+</turbo-stream>
