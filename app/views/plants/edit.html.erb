@@ -1,54 +1,69 @@
 <div class="container my-5">
   <h1 class="mb-4 text-success fw-bold">Edit Plant</h1>
 
-  <%= form_with model: @plant, local: true, class: "bg-white p-4 rounded-3 shadow-sm border" do |f| %>
+  <%= simple_form_for(@plant, html: { class: "bg-white p-4 rounded-3 shadow-sm border" }) do |f| %>
+    <%= f.error_notification %>
 
-  <%= hidden_field_tag :return_to, params[:return_to] %>
+    <%= hidden_field_tag :return_to, params[:return_to] %>
 
-    <div class="mb-3">
-      <%= f.label :name, class: "form-label fw-semibold" %>
-      <%= f.text_field :name, class: "form-control" %>
+    <div class="form-inputs">
+      <%= f.input :name, placeholder: "e.g. Monty", required: true %>
+
+      <div data-controller="autocomplete-plant" style="position: relative;" class="mb-3">
+        <%= f.input :specie,
+                    label: "Species",
+                    placeholder: "e.g. Monstera",
+                    required: true,
+                    input_html: {
+                      data: {
+                        autocomplete_plant_target: "input",
+                        action: "input->autocomplete-plant#search"
+                      },
+                      autocomplete: "off"
+                    } %>
+        <div data-autocomplete-plant-target="results"></div>
+      </div>
+
+      <%= f.input :plant_location, label: "Location", placeholder: "e.g. Living room" %>
+
+      <%= f.input :sunlight_exposure,
+                  label: "Sunlight Exposure",
+                  collection: ["Full sun", "Indirect sunlight", "Partial shade", "Shade"],
+                  prompt: "Select sunlight needs...",
+                  required: true %>
+
+      <%= f.input :date_added,
+                  as: :date,
+                  label: "When did you get this plant?",
+                  start_year: Date.today.year - 10,
+                  end_year: Date.today.year,
+                  order: [:day, :month, :year] %>
+
+      <%= f.input :last_watered_on,
+                  as: :date,
+                  label: "Last Watered On",
+                  start_year: Date.today.year - 1,
+                  end_year: Date.today.year,
+                  include_blank: true,
+                  order: [:day, :month, :year] %>
+
+      <%= f.input :last_fertilized_on,
+                  as: :date,
+                  label: "Last Fertilized On",
+                  start_year: Date.today.year - 1,
+                  end_year: Date.today.year,
+                  include_blank: true,
+                  order: [:day, :month, :year] %>
+
+      <div class="form-group mb-3">
+        <%= f.label :photos, "Upload Plant Image", class: "form-label fw-semibold" %>
+        <%= f.file_field :photos, multiple: true, accept: "image/*", class: "form-control" %>
+      </div>
     </div>
 
-    <div class="mb-3">
-      <%= f.label :specie, "Species", class: "form-label fw-semibold" %>
-      <%= f.text_field :specie, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :plant_location, "Location", class: "form-label fw-semibold" %>
-      <%= f.text_field :plant_location, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :sunlight_exposure, "Sunlight Exposure", class: "form-label fw-semibold" %>
-      <%= f.text_field :sunlight_exposure, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :date_added, "When did you get this plant?", class: "form-label fw-semibold" %>
-      <%= f.date_field :date_added, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :last_watered_on, "Last Watered On", class: "form-label fw-semibold" %>
-      <%= f.date_field :last_watered_on, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :last_fertilized_on, "Last Fertilized On", class: "form-label fw-semibold" %>
-      <%= f.date_field :last_fertilized_on, class: "form-control" %>
-    </div>
-    <div class="form-group">
-       <%= f.label :photo %>
-       <%= f.file_field :photo, accept: "image/*", class: "form-control" %>
-     </div>
-
-
-    <div class="d-flex gap-3 mt-4">
-      <%= f.submit "Save changes", class: "btn btn-success px-4" %>
+    <div class="form-actions d-flex gap-3 mt-4">
+      <%= f.button :submit, "Save changes", class: "btn btn-success px-4" %>
       <%= link_to "Cancel", params[:return_to] == "index" ? plants_path : plant_path(@plant), class: "btn btn-outline-secondary" %>
     </div>
-
   <% end %>
 </div>
