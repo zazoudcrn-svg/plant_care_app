@@ -18,4 +18,10 @@ class ApplicationController < ActionController::Base
     # For additional in app/views/devise/registrations/edit.html.erb
     devise_parameter_sanitizer.permit(:account_update, keys: %i[first_name last_name user_location])
   end
+
+  private
+
+  def after_sign_in_path_for(_resource)
+    plants_path
+  end
 end
