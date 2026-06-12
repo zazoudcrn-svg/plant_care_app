@@ -28,24 +28,29 @@
                 class: "card-img-top rounded-top-3",
                 style: "height: 200px; object-fit: cover; cursor: pointer;",
                 data: { upload_trigger: plant.id } %>
-              <% else %>
+            <% else %>
+              <div class="position-relative" style="height: 200px; cursor: pointer;" onclick="document.getElementById('file-input-<%= plant.id %>').click()">
                 <%= image_tag "placeholders.jpg",
-                class: "card-img-top rounded-top-3 opacity-50",
-                style: "height: 200px; object-fit: cover; cursor: pointer;",
-                data: { upload_trigger: plant.id } %>
-                <% end %>
+                  class: "card-img-top rounded-top-3 opacity-50",
+                  style: "height: 200px; object-fit: cover;" %>
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center rounded-top-3" style="background: rgba(0,0,0,0.25);">
+                  <i class="fa-solid fa-camera text-white fs-4 mb-1"></i>
+                  <span class="text-white small fw-semibold">Add a photo</span>
+                </div>
+              </div>
+            <% end %>
 
-                <%= form_with model: plant,
-                 url: plant_path(plant),
-                 method: :patch,
-                 data: { turbo_stream: true },
-                 html: { id: "upload-form-#{plant.id}" } do |f| %>
+            <%= form_with model: plant,
+              url: plant_path(plant),
+              method: :patch,
+              data: { turbo_stream: true },
+              html: { id: "upload-form-#{plant.id}" } do |f| %>
+              <%= f.file_field :photo,
+                accept: "image/*",
+                style: "display: none;",
+                id: "file-input-#{plant.id}" %>
+            <% end %>
 
-                <%= f.file_field :photo,
-                   accept: "image/*",
-                   style: "display: none;",
-                   id: "file-input-#{plant.id}" %>
-                <% end %>
             <div class="card-body d-flex flex-column">
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <h5 class="card-title fw-bold mb-0"><%= plant.name %></h5>
