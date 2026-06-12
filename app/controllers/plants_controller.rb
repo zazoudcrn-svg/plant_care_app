@@ -32,13 +32,16 @@ class PlantsController < ApplicationController
   def update
     @plant = current_user.plants.find(params[:id])
 
-    # Add new photos without removing old ones
-    @plant.photos.attach(plant_params[:photos]) if plant_params[:photos]
+    @plant.photo.attach(plant_params[:photo]) if plant_params[:photo]
 
-    if @plant.update(plant_params.except(:photos))
-      redirect_to @plant, notice: "Plant updated successfully"
+    # If the request comes from EDIT page → normal redirect
+    if request.referrer&.include?("/edit")
+      redirect_to plants_path, notice: "Plant updated successfully"
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { redirect_to plants_path }
+        format.turbo_stream
+      end
     end
   end
 
@@ -119,7 +122,7 @@ class PlantsController < ApplicationController
       :date_added,
       :last_watered_on,
       :last_fertilized_on,
-      photos: []
+      :photo
     )
   end
 end

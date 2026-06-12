@@ -38,10 +38,10 @@
             <%= f.input :date_added, as: :date, label: "When did you get this plant?", start_year: Date.today.year %>
             <%= f.input :last_watered_on, as: :date, label: "Last Watered On", start_year: Date.today.year - 1, end_year: Date.today.year, include_blank: true %>
             <%= f.input :last_fertilized_on, as: :date, label: "Last Fertilized On", start_year: Date.today.year - 1, end_year: Date.today.year, include_blank: true %>
-          <div class="form-group">
-             <%= f.label :photos %>
-             <%= f.file_field :photos, multiple: true, accept: "image/*", class: "form-control" %>
-          </div>
+               <div class="form-group">
+                <%= f.label :photo, "Upload Plant Image" %>
+                <%= f.file_field :photo, accept: "image/*", class: "form-control" %>
+              </div>
           </div>
           <div class="form-actions mt-4 d-flex gap-2">
             <%= link_to "Cancel", plants_path, class: "btn btn-light border w-50 rounded-3" %>
