@@ -34,14 +34,14 @@ class PlantsController < ApplicationController
 
     @plant.photo.attach(plant_params[:photo]) if plant_params[:photo]
 
-    # If the request comes from EDIT page → normal redirect
-    if request.referrer&.include?("/edit")
-      redirect_to plants_path, notice: "Plant updated successfully"
-    else
-      respond_to do |format|
-        format.html { redirect_to plants_path }
-        format.turbo_stream
+    if @plant.update(plant_params.except(:photo))
+      if params[:return_to] == "index"
+        redirect_to plants_path, notice: "Plant updated successfully"
+      else
+        redirect_to plant_path(@plant), notice: "Plant updated successfully"
       end
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 

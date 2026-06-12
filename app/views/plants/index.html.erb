@@ -65,7 +65,7 @@
 
               <div class="d-flex justify-content-between align-items-center mt-auto pt-3">
                 <div class="d-flex gap-2">
-                  <%= link_to edit_plant_path(plant), class: "btn btn-sm btn-outline-secondary rounded-pill" do %>
+                  <%= link_to edit_plant_path(plant, return_to: :index), class: "btn btn-sm btn-outline-secondary rounded-pill" do %>
                     <i class="fa-solid fa-pen"></i>
                   <% end %>
                   <%= link_to plant_path(plant), data: { turbo_method: :delete, turbo_confirm: "Delete this plant?" }, class: "btn btn-sm btn-outline-danger rounded-pill" do %>
