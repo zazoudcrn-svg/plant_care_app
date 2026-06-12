@@ -38,6 +38,12 @@
       <%= f.date_field :last_fertilized_on, class: "form-control" %>
     </div>
 
+    <div class="form-group">
+       <%= f.label :photos %>
+       <%= f.file_field :photos, multiple: true, accept: "image/*", class: "form-control" %>
+    </div>
+
+
     <div class="d-flex gap-3 mt-4">
       <%= f.submit "Save changes", class: "btn btn-success px-4" %>
       <%= link_to "Cancel", @plant, class: "btn btn-outline-secondary" %>

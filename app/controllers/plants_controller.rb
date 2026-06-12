@@ -31,7 +31,11 @@ class PlantsController < ApplicationController
 
   def update
     @plant = current_user.plants.find(params[:id])
-    if @plant.update(plant_params)
+
+    # Add new photos without removing old ones
+    @plant.photos.attach(plant_params[:photos]) if plant_params[:photos]
+
+    if @plant.update(plant_params.except(:photos))
       redirect_to @plant, notice: "Plant updated successfully"
     else
       render :edit, status: :unprocessable_entity
@@ -114,7 +118,8 @@ class PlantsController < ApplicationController
       :sunlight_exposure,
       :date_added,
       :last_watered_on,
-      :last_fertilized_on
+      :last_fertilized_on,
+      photos: []
     )
   end
 end
