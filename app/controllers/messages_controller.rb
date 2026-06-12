@@ -28,7 +28,7 @@ class MessagesController < ApplicationController
   private
 
   def generate_chat_title_if_first_message
-    prompt = "Create a very short, catchy title (maximum 3-4 words) in the user's language based on this message: '#{@message.content}'. Do not use quotes, punctuation, or extra explanations. Just give the title."
+    prompt = "Create a very short, catchy title (maximum 3-4 words) in English based on this message: '#{@message.content}'. Do not use quotes, punctuation, or extra explanations. Just give the title."
 
     ai_title_response = @ruby_llm_chat.ask(prompt)
 
@@ -66,6 +66,11 @@ class MessagesController < ApplicationController
 
     user = @chat.user || current_user
     user_location = user&.user_location || "unknown location"
+
+    api_data = PerenualService.new.search_plant(@plant.specie) || {}
+    verified_common_name = api_data[:common_name] || "Not found in registry"
+    verified_sci_name    = api_data[:scientific_name] || specie
+    perenual_db_id       = api_data[:perenual_id] || "N/A"
 
     <<~PROMPT
       You are Greeny, an elite AI botanist and the personalized, all-in-one care assistant for a specific plant.
@@ -106,6 +111,13 @@ class MessagesController < ApplicationController
       - Always treat the plant as an individual named '#{name}'.
       - Use structure (bullet points, clear steps) for diagnostics and care guides so it's easy to read.
       - Be warm, encouraging, but scientifically accurate. Never give vague advice.
+
+      ADDITIONAL BOTANICAL CONTEXT (Live API Data):
+      - Official Common Name: #{verified_common_name}
+      - Verified Scientific Name: #{verified_sci_name}
+      - Perenual Database ID: #{perenual_db_id}
+
+      Please use this verified scientific name and database ID to guide your internal knowledge!
     PROMPT
   end
 end
