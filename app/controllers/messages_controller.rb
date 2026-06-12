@@ -67,6 +67,10 @@ class MessagesController < ApplicationController
     user = @chat.user || current_user
     user_location = user&.user_location || "unknown location"
 
+    days_ago = @plant.days_since_last_watered
+    watering_history_context = days_ago ? "Last watered #{days_ago} days ago (on #{last_watered})." : "No watering records available yet."
+    weather_forecast = fetch_forecast_summary(user_location)
+
     api_data = PerenualService.new.search_plant(@plant.specie) || {}
     verified_common_name = api_data[:common_name] || "Not found in registry"
     verified_sci_name    = api_data[:scientific_name] || specie
@@ -84,8 +88,11 @@ class MessagesController < ApplicationController
       - User's Location (City for Weather Context): #{user_location}
 
       KNOWN CARE HISTORY:
-      - Last Watered On: #{last_watered}
+      - Last Watered On: #{last_watered} (#{watering_history_context})
       - Last Fertilized On: #{last_fertilized}
+
+      UPCOMING WEATHER FORECAST FOR #{user_location.upcase}:
+      #{weather_forecast}
 
       YOUR CORE CAPABILITIES & RESPONSIBILITIES:
 
@@ -106,6 +113,8 @@ class MessagesController < ApplicationController
       4. SMART SCHEDULE CALCULATIONS (WEATHER & LOGISTICS):
          - Keep track of 'Last Watered' (#{last_watered}) and 'Last Fertilized' (#{last_fertilized}).
          - Anticipate future weather logic for #{user_location}. If the user complains about current extreme indoor or outdoor weather conditions, adapt your diagnosis and future scheduling dynamically.
+         - CRITICAL TASK: Evaluate the upcoming weather forecast and light conditions (#{sunlight_exposure}) against the specific biological watering needs of a #{specie} (e.g., succulent vs. tropical plant) and the days since last watered (#{days_ago || 'unknown'}).
+         - Combine the evaporation speed (caused by the forecast temperatures) with the natural drought tolerance of this specific species to calculate precise, tailored watering recommendations.
 
       OUTPUT STYLE GUIDELINES:
       - Always treat the plant as an individual named '#{name}'.
@@ -119,5 +128,37 @@ class MessagesController < ApplicationController
 
       Please use this verified scientific name and database ID to guide your internal knowledge!
     PROMPT
+  end
+
+  def fetch_forecast_summary(city)
+    return "No weather data available (location not specified)." if city.blank?
+
+    url = "https://api.openweathermap.org/data/2.5/forecast?q=#{URI.encode_www_form_component(city)}&appid=#{ENV.fetch(
+      'OPENWEATHERMAP_API_KEY', nil
+    )}&units=metric"
+    response = Net::HTTP.get(URI.parse(url))
+    data = JSON.parse(response)
+
+    if data["list"].present?
+      forecast_entries = data["list"].group_by { |entry| entry["dt_txt"].split(" ").first }
+                                     .reject { |date, _| date == Date.today.to_s }
+                                     .map do |date, entries|
+        entries.find do |e|
+          e["dt_txt"].include?("12:00:00")
+        end || entries.first
+      end
+                                                                                              .first(5)
+
+      forecast_entries.map do |entry|
+        date = Date.parse(entry["dt_txt"]).strftime("%A (%b %d)")
+        temp = entry["main"]["temp"].round
+        desc = entry["weather"].first["description"]
+        "- #{date}: #{temp}°C, #{desc}"
+      end.join("\n")
+    else
+      "Weather forecast data currently unavailable."
+    end
+  rescue StandardError
+    "Weather forecast data currently unavailable due to an API connection issue."
   end
 end
