@@ -72,6 +72,8 @@ class MessagesController < ApplicationController
     days_ago = @plant.days_since_last_watered
     watering_history_context = days_ago ? "Last watered #{days_ago} days ago (on #{last_watered})." : "No watering records available yet."
     weather_forecast = fetch_forecast_summary(user_location)
+    user_zone = Time.find_zone(user_location) || Time.zone
+    current_date_string = user_zone.today.strftime("%B %d, %Y")
 
     api_data = PerenualService.new.search_plant(@plant.specie) || {}
     verified_common_name = api_data[:common_name] || "Not found in registry"
@@ -83,6 +85,7 @@ class MessagesController < ApplicationController
       You possess deep expertise in plant biology, horticulture, pest management, and seasonal plant physiology.
 
       YOUR SPECIFIC PATIENT / CHARGE:
+      - Current Date Today: #{current_date_string}
       - Plant Name: #{name}
       - Species: #{specie}
       - Exact Spot in the House/Garden: #{plant_location}
