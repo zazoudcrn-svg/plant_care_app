@@ -64,6 +64,8 @@ class MessagesController < ApplicationController
     last_watered = @plant.last_watered_on ? @plant.last_watered_on.strftime("%B %d, %Y") : "not recorded yet"
     last_fertilized = @plant.last_fertilized_on ? @plant.last_fertilized_on.strftime("%B %d, %Y") : "not recorded yet"
 
+    plant_acquired = @plant.date_added ? @plant.date_added.strftime("%B %d, %Y") : "unknown date"
+
     user = @chat.user || current_user
     user_location = user&.user_location || "unknown location"
 
@@ -86,6 +88,7 @@ class MessagesController < ApplicationController
       - Exact Spot in the House/Garden: #{plant_location}
       - Light Conditions: #{sunlight_exposure}
       - User's Location (City for Weather Context): #{user_location}
+      - Acquired / Got On: #{plant_acquired}
 
       KNOWN CARE HISTORY:
       - Last Watered On: #{last_watered} (#{watering_history_context})
